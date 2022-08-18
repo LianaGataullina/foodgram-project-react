@@ -18,32 +18,10 @@ from .serializers import (CustomUserSerializer, FavoriteSerializer,
                           RecipeCreateSerializer, RecipeListSerializer,
                           ShoppingCartSerializer, SubscribeSerializer,
                           TagSerializer)
+from .utils import add_to_favorite_or_shopping_cart
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from users.models import Subscribe, User
-
-
-def add_to_favorite_or_shopping_cart(
-        self, request, object_class, serializer_class, pk=None):
-    user = self.request.user
-    recipe = get_object_or_404(Recipe, pk=pk)
-    object_class_exists = object_class.objects.filter(
-        user=user, recipe=recipe
-    ).exists()
-    if request.method == 'POST':
-        if not object_class_exists:
-            instance = object_class.objects.create(user=user, recipe=recipe)
-            serializer = serializer_class(instance.recipe)
-            return Response(
-                data=serializer.data,
-                status=status.HTTP_201_CREATED
-            )
-    elif request.method == 'DELETE':
-        if not object_class_exists:
-            data = {'errors': 'Такого рецепта нет'}
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        object_class.objects.filter(user=user, recipe=recipe).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CustomUserViewSet(UserViewSet):
@@ -164,7 +142,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
     )
     def download_shopping_cart(self, request):
         """Скачать список покупок."""
-        # user = self.request.user
         ingredients = IngredientRecipe.objects.filter(
             recipe__shopping_cart__user=request.user
         ).values(

@@ -1,32 +1,12 @@
-from django.db.models import F
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 
+from .utils import add_ingredients
 from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, Tag
 from users.models import Subscribe, User
-
-
-def get_is_subscribed(self, obj):
-    user = self.context['request'].user
-    if user.is_anonymous:
-        return False
-    return Subscribe.objects.filter(
-        user=user,
-        author=obj
-    ).exists()
-
-
-def add_ingredients(recipe, ingredients):
-    ingredients_batch = []
-    for ingredient in ingredients:
-        amount = ingredient.get('amount')
-        ingredient_id = get_object_or_404(Ingredient, id=ingredient.get('id'))
-        ingredients_batch.append(IngredientRecipe(recipe=recipe, ingredient=ingredient_id, amount=amount))
-    IngredientRecipe.objects.bulk_create(ingredients_batch, len(ingredients_batch))
-    recipe.save()
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -37,13 +17,21 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    get_is_subscribed = get_is_subscribed
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('email', 'id', 'username', 'first_name',
                   'last_name', 'is_subscribed', )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        if user.is_anonymous:
+            return False
+        return Subscribe.objects.filter(
+            user=user,
+            author=obj
+        ).exists()
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -59,8 +47,7 @@ class SubscriptionsRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class SubscribeSerializer(serializers.ModelSerializer):
-    get_is_subscribed = get_is_subscribed
+class SubscribeSerializer(CustomUserSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()

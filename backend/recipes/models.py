@@ -32,7 +32,7 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     """Модель ингредиентов."""
-    name = models.CharField('Название', max_length=200, unique=True)
+    name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField(
         'Единица измерения',
         max_length=200
@@ -42,6 +42,9 @@ class Ingredient(models.Model):
         ordering = ('name', )
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        models.UniqueConstraint(
+            fields=['name', 'measurement_unit'],
+            name='unique_ingredient')
 
     def __str__(self):
         return self.name
@@ -118,7 +121,9 @@ class IngredientRecipe(models.Model):
     class Meta:
         verbose_name = 'Количество ингредиента'
         verbose_name_plural = 'Количество ингредиентов'
-        unique_together = [['recipe', 'ingredient', 'amount']]
+        models.UniqueConstraint(
+            fields=['recipe', 'ingredient', 'amount'],
+            name='unique_ingredientrecipe')
 
     def __str__(self):
         return (f'{self.ingredient.name} - {self.amount}'
@@ -143,7 +148,9 @@ class Favorite(models.Model):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
-        unique_together = [['user', 'recipe']]
+        models.UniqueConstraint(
+            fields=['user', 'recipe'],
+            name='unique_favorite')
 
 
 class ShoppingCart(models.Model):
@@ -164,4 +171,6 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Покупка'
         verbose_name_plural = 'Покупки'
-        unique_together = [['user', 'recipe']]
+        models.UniqueConstraint(
+            fields=['user', 'recipe'],
+            name='unique_shoppingcart')
