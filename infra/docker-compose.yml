@@ -10,18 +10,14 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: lianaliana/foodgram-frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
     depends_on:
       - db
 
   backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
+    image: lianaliana/foodgram:latest
     restart: always
     volumes:
       - static_value:/code/static/
