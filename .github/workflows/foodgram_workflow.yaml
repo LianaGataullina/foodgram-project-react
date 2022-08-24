@@ -62,7 +62,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             sudo docker-compose stop
-            sudo docker-compose down --volume --rmi all
+            sudo docker-compose down --volumes --rmi all
             rm .env
             touch .env 
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
