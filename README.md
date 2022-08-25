@@ -1,5 +1,9 @@
 # `Foodgram` - сайт 'Продуктовый помощник'
 
+####### Технологический стек
+[![Django-app workflow](https://github.com/LianaGataullina/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/LianaGataullina/foodgram-project-react/actions/workflows/foodgram_workflow.yaml)
+
+
 #### О проекте:
  Онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
  
@@ -41,9 +45,18 @@
 `sudo docker-compose exec backend python manage.py loader`
 
 
+Докуметация API:
+
+`http://84.252.140.220/api/docs/redoc.html`
+
+Проект:
+
+`http://84.252.140.220`
+
+
 Суперпользователь:
 
 `Адрес электронной почты: test@yandex.ru`
 
 `Пароль: test`
-=======
+
