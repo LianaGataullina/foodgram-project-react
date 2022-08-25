@@ -44,11 +44,12 @@ class CustomUserViewSet(UserViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False,
-            methods=['get'],
+            methods=['get', 'post'],
             permission_classes=(IsAuthenticated, ))
     def subscriptions(self, request):
         user = request.user
-        queryset = User.objects.filter(follower__user=user)
+        # queryset = Favorite.objects.filter(follower__user=user)
+        queryset = User.objects.filter(following__user=user)
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeSerializer(
             pages,
