@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetrieveListViewSet
+from api.pagination import LimitPageNumberPagination
 from .permissions import IsAuthorAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
                           IngredientSerializer, PasswordSerializer,
@@ -106,6 +107,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
     permission_classes = (IsAuthorAdminOrReadOnly,)
+    pagination_class = LimitPageNumberPagination
     filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipeFilter
 
