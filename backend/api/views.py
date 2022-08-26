@@ -123,8 +123,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @action(
         methods=['post', 'delete'],
         detail=True,
-        permission_classes=(IsAuthenticated, ),
-        filterset_class=RecipeFilter
+        permission_classes=(IsAuthenticated, )
     )
     def favorite(self, request, pk=None):
         return add_to_favorite_or_shopping_cart(
