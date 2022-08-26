@@ -1,6 +1,5 @@
 # `Foodgram` - сайт 'Продуктовый помощник'
 
-####### Технологический стек
 [![Django-app workflow](https://github.com/LianaGataullina/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/LianaGataullina/foodgram-project-react/actions/workflows/foodgram_workflow.yaml)
 
 
